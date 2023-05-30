@@ -1,13 +1,34 @@
+:root{
+    --couleur-de-fond : #111111;
+    --couleur-p:rgb(212, 212, 212);
+    --jaune-logo-lol:#bd9338;
+}
+
+body {
+    background-color: var(--couleur-de-fond);
+    color: var(--couleur-p);
+}
+
 main {
     display: flex;
+    width: fit-content;
+    gap: 2rem;
 }
 
 section#left {
-    width: 40%;
+    flex: 1;
 }
 
 section#right {
-    width: fit-content;
+    flex: 1;
+}
+
+section#right #championAssets {
+    width: 100%;
+}
+
+section#right #championAssets img {
+    width: 100%;
 }
 
 /* Div contenant la liste des champions */
@@ -15,4 +36,10 @@ section#right {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
+}
+
+/* Div contenant le nom et le lore du champion */
+#containerInfo p a{
+    color: var(--jaune-logo-lol);
+    cursor: pointer;
 }
