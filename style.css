@@ -1,0 +1,18 @@
+main {
+    display: flex;
+}
+
+section#left {
+    width: 40%;
+}
+
+section#right {
+    width: fit-content;
+}
+
+/* Div contenant la liste des champions */
+#containerChampion {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
