@@ -1,7 +1,7 @@
-:root{
-    --couleur-de-fond : #111111;
-    --couleur-p:rgb(212, 212, 212);
-    --jaune-logo-lol:#bd9338;
+:root {
+    --couleur-de-fond: #111111;
+    --couleur-p: rgb(212, 212, 212);
+    --jaune-logo-lol: #bd9338;
 }
 
 body {
@@ -39,7 +39,14 @@ section#right #championAssets img {
 }
 
 /* Div contenant le nom et le lore du champion */
-#containerInfo p a{
+#containerInfo p a {
     color: var(--jaune-logo-lol);
     cursor: pointer;
+}
+
+/* Div contenant les 5 spell du champion */
+#containerSpell {
+    display: flex;
+    justify-content: flex-start;
+    gap: 1.5rem;
 }
