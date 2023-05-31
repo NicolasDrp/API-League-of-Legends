@@ -9,6 +9,42 @@ body {
     color: var(--couleur-p);
 }
 
+/* Style du header/nav */
+nav {
+    display: flex;
+    align-items: center;
+}
+
+nav a {
+    color: var(--jaune-logo-lol);
+    text-decoration: none;
+    font-size: x-large;
+}
+
+.menu {
+    list-style-type: none;
+    padding: 0;
+    margin-left: 4rem;
+}
+
+.menu li {
+    display: inline-block;
+    margin-left: 4rem;
+}
+
+.menu li:first-child {
+    margin-left: 0;
+}
+
+.menu li a {
+    color: var(--jaune-logo-lol);
+    text-decoration: none;
+}
+
+.menu li a:hover {
+    text-decoration: underline;  
+}
+
 main {
     display: flex;
     width: fit-content;
