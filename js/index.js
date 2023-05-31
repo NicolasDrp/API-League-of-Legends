@@ -1,3 +1,7 @@
+//Liste des noms des stats pour le graph
+let statsList = [];
+//Liste des valeurs des stats pour le graph
+let statsValues = [];
 document.addEventListener('DOMContentLoaded', async function () {
     const containerChampion = document.getElementById('containerChampion');
     let championid = 'Annie';
@@ -37,9 +41,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     //Afficher la liste des champion existant
     function printChampion() {
         let result = JSON.parse(this.responseText);
-        console.log(result);
         let championList = result.data;
-        console.log(championList);
 
         // on trie les champions par clé (key)
         const sortedChampions = Object.values(championList).sort((a, b) => {
@@ -47,8 +49,6 @@ document.addEventListener('DOMContentLoaded', async function () {
             let championIdB = parseInt(b.key);
             return championIdA - championIdB;
         });
-
-        console.log(sortedChampions);
 
         // Je boucle sur le tableau de résultats
         for (const champion in sortedChampions) {
@@ -151,7 +151,6 @@ document.addEventListener('DOMContentLoaded', async function () {
             let img = document.createElement('img');
             img.src = `http://ddragon.leagueoflegends.com/cdn/13.10.1/img/spell/${spell.id}.png`;
             div.appendChild(img);
-            console.log(spell);
 
             // Si l'image de la compétence passive est cliqué
             img.addEventListener('click', function () {
@@ -203,20 +202,6 @@ document.addEventListener('DOMContentLoaded', async function () {
             }
             // passer les bordure en jaune pour indiquer que le spell est sélectionner
             img.style.border = borderStyle
-
-            // //J'affiche de quelle compétence il s'agit (passive,A,Z,E,R)
-            // let span = document.createElement('span');
-            // span.innerHTML = 'Compétence passive';
-            // spellDescription.appendChild(span);
-            // //J'affiche le nom de la comptétence
-            // let h3 = document.createElement('h3');
-            // h3.innerHTML = championInfo.passive.name;
-            // spellDescription.appendChild(h3);
-
-            // //J'affiche le desription de la compétence
-            // let p = document.createElement('p');
-            // p.innerHTML = championInfo.passive.description;
-            // spellDescription.appendChild(p);
             printPassive();
         });
 
@@ -236,6 +221,9 @@ document.addEventListener('DOMContentLoaded', async function () {
             spellDescription.appendChild(p);
         }
 
+        statsList = Object.keys(championInfo.stats);
+        statsValues = Object.values(championInfo.stats);
+        updateChart1();
     }
 
 });
