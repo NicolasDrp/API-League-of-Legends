@@ -2,6 +2,7 @@
     --couleur-de-fond: #111111;
     --couleur-p: rgb(212, 212, 212);
     --jaune-logo-lol: #bd9338;
+    --couleur-div: #1A1818;
 }
 
 body {
@@ -13,6 +14,10 @@ body {
 nav {
     display: flex;
     align-items: center;
+}
+
+nav .logo {
+    font-size: xx-large;
 }
 
 nav a {
@@ -42,7 +47,7 @@ nav a {
 }
 
 .menu li a:hover {
-    text-decoration: underline;  
+    text-decoration: underline;
 }
 
 main {
@@ -57,6 +62,7 @@ section#left {
 
 section#right {
     flex: 1;
+    background-color: var(--couleur-div);
 }
 
 section#right #championAssets {
@@ -72,6 +78,16 @@ section#right #championAssets img {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
+    background-color: var(--couleur-div);
+}
+
+#containerChampion {
+    text-align: center;
+}
+
+#containerChampion div p {
+    margin-top: 0;
+    font-size: large;
 }
 
 /* Div contenant le nom et le lore du champion */
@@ -85,4 +101,58 @@ section#right #championAssets img {
     display: flex;
     justify-content: flex-start;
     gap: 1.5rem;
+}
+
+/* Graphique des statistiques */
+#chart {
+    width: 100%;
+}
+
+#myChart {
+    margin: auto;
+    width: 80% !important;
+    height: auto !important;
+}
+
+/* Div contenant le formulaire */
+/* #containerForm {
+    display: flex;
+    flex-direction: column;
+} */
+#containerForm {
+    width: 400px;
+    margin: 0 auto;
+}
+
+#form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+label {
+    margin-bottom: 5px;
+}
+
+input[type="text"],
+select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+button[type="submit"] {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button[type="submit"]:hover {
+    background-color: #45a049;
 }

@@ -15,6 +15,14 @@ document.addEventListener('DOMContentLoaded', async function () {
     let borderStyle = 'solid var(--jaune-logo-lol) 3px';
     //Div contenant le nom , le type et la description des spells
     let spellDescription = document.getElementById('spellDescription');
+    //Formulaire de recherche/filtre des champions
+    let form = document.getElementById('form');
+    //List trier des champions
+    let sortedChampions;
+    //Select contenant les tags des champions
+    let filter = document.getElementById('filter');
+    //input pour rechercher un champion
+    let searchInput = document.getElementById('searchInput');
 
     function fetch(url, method, fun) {
         //Initialisation de XHR
@@ -44,11 +52,14 @@ document.addEventListener('DOMContentLoaded', async function () {
         let championList = result.data;
 
         // on trie les champions par clé (key)
-        const sortedChampions = Object.values(championList).sort((a, b) => {
+        sortedChampions = Object.values(championList).sort((a, b) => {
             let championIdA = parseInt(a.key);
             let championIdB = parseInt(b.key);
             return championIdA - championIdB;
         });
+
+        //Appelle la fonction getUniqueTags pour recupere les tags disponibles
+        getUniqueTags(sortedChampions);
 
         // Je boucle sur le tableau de résultats
         for (const champion in sortedChampions) {
@@ -87,7 +98,6 @@ document.addEventListener('DOMContentLoaded', async function () {
     function printChampionInfo() {
         let result = JSON.parse(this.responseText);
         let championInfo = result.data[championid];
-        console.log(championInfo);
 
         //Je vide la div championAssets
         championAssets.innerHTML = "";
@@ -225,5 +235,112 @@ document.addEventListener('DOMContentLoaded', async function () {
         statsValues = Object.values(championInfo.stats);
         updateChart1();
     }
+
+    //A l'envoie du formulaire , appelle la fonction searchResult
+    form.addEventListener('submit', searchResult);
+    //Au changement de choix du select, appelle la fonction searchResult
+    filter.addEventListener('change', searchResult);
+
+
+    function searchResult() {
+        event.preventDefault();
+
+        //On vide la div containerChampion
+        containerChampion.innerHTML = '';
+
+        let tagSelected = filter.value;
+        let search = searchInput.value.toLowerCase();
+
+        for (let i = 0; i < sortedChampions.length; i++) {
+            const champ = sortedChampions[i];
+            let tag; // Déclaration de la variable tag ici
+
+            //Si aucun tag n'est sélectionné
+            if (tagSelected !== '') {
+                for (let j = 0; j < champ.tags.length; j++) {
+                    // Affectation de la valeur du tag à la variable tag
+                    tag = champ.tags[j];
+                    //Si la recherche et le tag correspondent à un champion
+                    if (champ.name.toLowerCase().includes(search) && tag === tagSelected) {
+                        printFilteredChamp(champ);
+                    }
+                }
+            } else {
+                // Si la recherche correspond à un champion
+                if (champ.name.toLowerCase().includes(search)) {
+                    printFilteredChamp(champ);
+                }
+            }
+        }
+    }
+
+    //Fonction pour afficher les champion selon les champs de la recherche
+    function printFilteredChamp(champ) {
+        // Je crée un élément <div></div> pour le Champion
+        let div = document.createElement('div');
+
+        // J'affiche l'image du Champion
+        let img = document.createElement('img');
+        img.src = `http://ddragon.leagueoflegends.com/cdn/13.10.1/img/champion/${champ.image.full}`;
+        div.appendChild(img);
+
+        // J'affiche le nom du Champion
+        p = document.createElement('p');
+        p.innerHTML = champ.name;
+        div.appendChild(p);
+
+        // Si l'image est cliqué, lancer la fonction fetchChampionInfo
+        img.addEventListener('click', function () {
+            //vérifier si il y a des espaces et les supprimer
+            championid = champ.id;
+            fetchChampionInfo();
+        });
+
+        //On ajoute la div dans le container containerChampion
+        containerChampion.appendChild(div);
+    }
+
+    function getUniqueTags(sortedChampions) {
+        // Crée un set pour stocker les tags uniques
+        const uniqueTags = new Set();
+
+        // boucle sur les champion dans sortedChampions
+        for (const champion in sortedChampions) {
+            // Récupère les tags du champion actuel
+            const tags = sortedChampions[champion].tags;
+            tags.forEach(tag => {
+                // Ajoute le tag à uniqueTags
+                uniqueTags.add(tag);
+            });
+        }
+        // Convertit uniqueTags en tableau
+        const tagsList = Array.from(uniqueTags);
+        addTagsToSelect(tagsList);
+
+    }
+
+    function addTagsToSelect(tagsList) {
+        // Créer une nouvelle option vide
+        const option = document.createElement("option");
+        // Définir la valeur de l'option vide
+        option.value = '';
+        option.text = 'Role champion';
+        // Ajouter l'option vide au select
+        filter.appendChild(option);
+        // Parcourir le tableau des tags
+        tagsList.forEach(tag => {
+            // Créer une nouvelle option
+            const option = document.createElement("option");
+            // Définir la valeur de l'option
+            option.value = tag;
+            option.text = tag;
+
+            // Ajouter l'option au select
+            filter.appendChild(option);
+        });
+    }
+
+
+
 
 });
