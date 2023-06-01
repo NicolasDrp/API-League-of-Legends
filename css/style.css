@@ -51,7 +51,7 @@ nav li {
 
 main {
     display: flex;
-    width: fit-content;
+    width: 100%;
     gap: 2rem;
 }
 
@@ -66,8 +66,13 @@ section#right {
 }
 
 section#right #championAssets {
+    width: 100%;
+}
+
+section#right #itemAssets {
     width: 6rem;
 }
+
 
 section#right #championAssets img {
     width: 100%;

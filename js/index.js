@@ -23,12 +23,20 @@ document.addEventListener('DOMContentLoaded', async function () {
     let formItem = document.getElementById('formItem');
     //List trier des champions
     let sortedChampions;
+    //List trier des items
+    let itemList;
     //Select contenant les tags des champions
     let filter = document.getElementById('filter');
+    //Select contenant les tags des items
+    let filterItem = document.getElementById('filterItem');
     //input pour rechercher un champion
     let searchInput = document.getElementById('searchInput');
+    //input pour rechercher un item
+    let searchInputItem = document.getElementById('searchInputItem');
     //li du header pour afficher les items
     let itemLi = document.getElementById('itemLi');
+    //Variable pour savoir sur quelle page nous nous situons
+    let page = "champion";
 
     function fetch(url, method, fun) {
         //Initialisation de XHR
@@ -66,7 +74,8 @@ document.addEventListener('DOMContentLoaded', async function () {
         });
 
         //Appelle la fonction getUniqueTags pour recupere les tags disponibles
-        getUniqueTags(sortedChampions);
+        let tagsList = getUniqueTags(sortedChampions);
+        addTagsToSelect(tagsList, 'Role champion', filter);
 
         // Je boucle sur le tableau de résultats
         for (const champion in sortedChampions) {
@@ -248,12 +257,18 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
 
     //A l'envoie du formulaire , appelle la fonction searchResult
-    form.addEventListener('submit', searchResult);
+    form.addEventListener('submit', function (event) {
+        event.preventDefault();
+        searchResult(sortedChampions, filter, searchInput, `http://ddragon.leagueoflegends.com/cdn/13.10.1/img/champion/`);
+    });
     //Au changement de choix du select, appelle la fonction searchResult
-    filter.addEventListener('change', searchResult);
+    filter.addEventListener('change', function (event) {
+        event.preventDefault();
+        searchResult(sortedChampions, filter, searchInput, `http://ddragon.leagueoflegends.com/cdn/13.10.1/img/champion/`);
+    });
 
 
-    function searchResult() {
+    function searchResult(list, filter, searchInput, lien) {
         event.preventDefault();
 
         //On vide la div containerChampion
@@ -262,8 +277,11 @@ document.addEventListener('DOMContentLoaded', async function () {
         let tagSelected = filter.value;
         let search = searchInput.value.toLowerCase();
 
-        for (let i = 0; i < sortedChampions.length; i++) {
-            const champ = sortedChampions[i];
+        const array = Object.values(list);
+
+
+        for (let i = 0; i < array.length; i++) {
+            const champ = array[i];
             let tag; // Déclaration de la variable tag ici
 
             //Si aucun tag n'est sélectionné
@@ -273,26 +291,26 @@ document.addEventListener('DOMContentLoaded', async function () {
                     tag = champ.tags[j];
                     //Si la recherche et le tag correspondent à un champion
                     if (champ.name.toLowerCase().includes(search) && tag === tagSelected) {
-                        printFilteredChamp(champ);
+                        printFilteredChamp(champ, lien);
                     }
                 }
             } else {
                 // Si la recherche correspond à un champion
                 if (champ.name.toLowerCase().includes(search)) {
-                    printFilteredChamp(champ);
+                    printFilteredChamp(champ, lien);
                 }
             }
         }
     }
 
     //Fonction pour afficher les champion selon les champs de la recherche
-    function printFilteredChamp(champ) {
+    function printFilteredChamp(champ, lien) {
         // Je crée un élément <div></div> pour le Champion
         let div = document.createElement('div');
 
         // J'affiche l'image du Champion
         let img = document.createElement('img');
-        img.src = `http://ddragon.leagueoflegends.com/cdn/13.10.1/img/champion/${champ.image.full}`;
+        img.src = `${lien}${champ.image.full}`;
         div.appendChild(img);
 
         // J'affiche le nom du Champion
@@ -302,9 +320,13 @@ document.addEventListener('DOMContentLoaded', async function () {
 
         // Si l'image est cliqué, lancer la fonction fetchChampionInfo
         img.addEventListener('click', function () {
-            //vérifier si il y a des espaces et les supprimer
-            championid = champ.id;
-            fetchChampionInfo();
+            if (page === 'champion') {
+                championid = champ.id;
+                fetchChampionInfo();
+            } else {
+                printItemInfo(champ);
+            }
+
         });
 
         //On ajoute la div dans le container containerChampion
@@ -326,16 +348,15 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
         // Convertit uniqueTags en tableau
         const tagsList = Array.from(uniqueTags);
-        addTagsToSelect(tagsList);
-
+        return tagsList;
     }
 
-    function addTagsToSelect(tagsList) {
+    function addTagsToSelect(tagsList, message, filter) {
         // Créer une nouvelle option vide
         const option = document.createElement("option");
         // Définir la valeur de l'option vide
         option.value = '';
-        option.text = 'Role champion';
+        option.text = message;
         // Ajouter l'option vide au select
         filter.appendChild(option);
         // Parcourir le tableau des tags
@@ -345,7 +366,6 @@ document.addEventListener('DOMContentLoaded', async function () {
             // Définir la valeur de l'option
             option.value = tag;
             option.text = tag;
-
             // Ajouter l'option au select
             filter.appendChild(option);
         });
@@ -361,7 +381,10 @@ document.addEventListener('DOMContentLoaded', async function () {
     //Afficher la liste des champion existant
     function printItem() {
         let result = JSON.parse(this.responseText);
-        let itemList = result.data;
+        itemList = result.data;
+
+        //J'indique que l'on se situe sur la page item
+        page = 'item';
 
         printItemInfo(itemList[1001]);
 
@@ -372,7 +395,10 @@ document.addEventListener('DOMContentLoaded', async function () {
         form.style.display = 'none';
         formItem.style.display = 'flex';
 
-        
+
+        let tagsList = getUniqueTags(itemList);
+        addTagsToSelect(tagsList, `Type d'item`, filterItem);
+
 
         // Je boucle sur le tableau de résultats
         for (const item in itemList) {
@@ -389,7 +415,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             p.innerHTML = itemList[item].name;
             div.appendChild(p);
 
-            // Si l'image est cliqué, lancer la fonction fetchChampionInfo
+            // Si l'image est cliqué, lancer la fonction printItemInfo
             img.addEventListener('click', function () {
                 printItemInfo(itemList[item]);
             });
@@ -398,68 +424,78 @@ document.addEventListener('DOMContentLoaded', async function () {
             containerChampion.appendChild(div);
         }
 
-        function printItemInfo(item) {
-
-            //Je vide la div championAssets
-            championAssets.innerHTML = "";
-            //Je vide la div containerInfo
-            containerInfo.innerHTML = "";
-            //Je vide la div containerSpell
-            containerSpell.innerHTML = "";
-            //Je vide la div spellDescription
-            spellDescription.innerHTML = '';
-            //Je vide la div itemAssets
-            itemAssets.innerHTML = '';
-            //Je vide la div chart
-            hideChart();
-
-            console.log(item);
-
-            // J'affiche l'image du item
-            let img = document.createElement('img');
-            img.src = `http://ddragon.leagueoflegends.com/cdn/13.11.1/img/item/${item.image.full}`;
-            itemAssets.appendChild(img);
-
-            // J'affiche le nom de l'item
-            let h2 = document.createElement('h2');
-            h2.innerHTML = item.name;
-            containerInfo.appendChild(h2);
-
-            // J'affiche la description de l'item
-            let p = document.createElement('p');
-            p.innerHTML = item.plaintext;
-            containerInfo.appendChild(p);
-
-            //Je verifie si l'item est achetable avec de l'or
-            let purchasableValue;
-            if (item.gold.purchasable) {
-                purchasableValue = "Oui";
-            } else {
-                purchasableValue = "Non"
-            }
-
-            // J'affiche si l'item est achetable avec de l'or
-            p = document.createElement('p');
-            p.innerHTML = `Achetable avec de l’or : ${purchasableValue}`;
-            containerInfo.appendChild(p);
-
-            // J'affiche le prix d'achat de l'item
-            p = document.createElement('p');
-            p.innerHTML = `Prix d’achat : ${item.gold.base}`;
-            containerInfo.appendChild(p);
-
-            // J'affiche le prix de revente de l'item
-            p = document.createElement('p');
-            p.innerHTML = `Prix de revente : ${item.gold.sell}`;
-            containerInfo.appendChild(p);
-
-            //J'ajoute un hr pour faire une ligne
-            let hr = document.createElement('hr');
-            containerInfo.appendChild(hr);
-        }
-
+        //A l'envoie du formulaire , appelle la fonction searchResult
+        formItem.addEventListener('submit', function (event) {
+            event.preventDefault();
+            // on trie les champions par clé (key)
+            sortedItem = Object.values(itemList).sort((a, b) => {
+                return parseInt(a.name) - parseInt(b.name)
+            });
+            searchResult(sortedItem, filterItem, searchInputItem, `http://ddragon.leagueoflegends.com/cdn/13.11.1/img/item/`);
+        });
+        //Au changement de choix du select, appelle la fonction searchResult
+        filterItem.addEventListener('change', function (event) {
+            event.preventDefault();
+            searchResult(itemList, filterItem, searchInputItem, `http://ddragon.leagueoflegends.com/cdn/13.11.1/img/item/`);
+        });
     };
 
+    function printItemInfo(item) {
 
+        //Je vide la div championAssets
+        championAssets.innerHTML = "";
+        //Je vide la div containerInfo
+        containerInfo.innerHTML = "";
+        //Je vide la div containerSpell
+        containerSpell.innerHTML = "";
+        //Je vide la div spellDescription
+        spellDescription.innerHTML = '';
+        //Je vide la div itemAssets
+        itemAssets.innerHTML = '';
+        //Je vide la div chart
+        hideChart();
+
+        // J'affiche l'image du item
+        let img = document.createElement('img');
+        img.src = `http://ddragon.leagueoflegends.com/cdn/13.11.1/img/item/${item.image.full}`;
+        itemAssets.appendChild(img);
+
+        // J'affiche le nom de l'item
+        let h2 = document.createElement('h2');
+        h2.innerHTML = item.name;
+        containerInfo.appendChild(h2);
+
+        // J'affiche la description de l'item
+        let p = document.createElement('p');
+        p.innerHTML = item.plaintext;
+        containerInfo.appendChild(p);
+
+        //Je verifie si l'item est achetable avec de l'or
+        let purchasableValue;
+        if (item.gold.purchasable) {
+            purchasableValue = "Oui";
+        } else {
+            purchasableValue = "Non"
+        }
+
+        // J'affiche si l'item est achetable avec de l'or
+        p = document.createElement('p');
+        p.innerHTML = `Achetable avec de l’or : ${purchasableValue}`;
+        containerInfo.appendChild(p);
+
+        // J'affiche le prix d'achat de l'item
+        p = document.createElement('p');
+        p.innerHTML = `Prix d’achat : ${item.gold.base}`;
+        containerInfo.appendChild(p);
+
+        // J'affiche le prix de revente de l'item
+        p = document.createElement('p');
+        p.innerHTML = `Prix de revente : ${item.gold.sell}`;
+        containerInfo.appendChild(p);
+
+        //J'ajoute un hr pour faire une ligne
+        let hr = document.createElement('hr');
+        containerInfo.appendChild(hr);
+    }
 
 });
