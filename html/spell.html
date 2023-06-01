@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/style.css">
-    <title>LOL</title>
+    <title>Compétences</title>
 </head>
 
 <body>
@@ -14,8 +14,9 @@
         <nav>
             <h1><a href="index.html" class="logo">LeagueOfLegends</a></h1>
             <ul class="menu">
-                <li>Quizz</li>
-                <li id="itemLi">Items</li>
+                <li><a href="">Quizz</a></li>
+                <li><a href="">Items</a></li>
+                <li><a href="spell.html">Spells</a></li>
             </ul>
         </nav>
     </header>
@@ -29,20 +30,13 @@
                     <select id="filter">
                     </select>
                 </form>
-                <form id="formItem">
-                    <label for="searchInputItem">Rechercher un champion</label>
-                    <input type="text" id="searchInputItem">
-                    <label for="filterItem">Filtrer les résultats</label>
-                    <select id="filterItem">
-                    </select>
-                </form>
             </div>
             <div id="containerChampion"></div>
         </section>
         <section id="right">
             <div id="championAssets">
+
             </div>
-            <div id="itemAssets"></div>
             <div id="containerInfo">
             </div>
             <div id="containerSpell"></div>
@@ -53,9 +47,7 @@
         </section>
     </main>
 
-    <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="/js/index.js" defer></script>
-    <script src="/js/chart.js" defer></script>
 </body>
 
 </html>

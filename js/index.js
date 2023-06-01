@@ -7,6 +7,8 @@ document.addEventListener('DOMContentLoaded', async function () {
     let championid = 'Annie';
     //Le container de l'assets du champion de la section "right"
     let championAssets = document.getElementById('championAssets');
+    //Le container de l'assets de l'item de la section "right"
+    let itemAssets = document.getElementById('itemAssets');
     //le container des informations (lore et compétence ) de la section "right"
     let containerInfo = document.getElementById('containerInfo');
     //div contenant les 5 spell du champion choisis
@@ -17,6 +19,8 @@ document.addEventListener('DOMContentLoaded', async function () {
     let spellDescription = document.getElementById('spellDescription');
     //Formulaire de recherche/filtre des champions
     let form = document.getElementById('form');
+    //Formulaire de recherche/filtre des item
+    let formItem = document.getElementById('formItem');
     //List trier des champions
     let sortedChampions;
     //Select contenant les tags des champions
@@ -47,6 +51,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     function fetchChampionList() {
         fetch(`http://ddragon.leagueoflegends.com/cdn/13.10.1/data/fr_FR/champion.json`, 'GET', printChampion);
     }
+
 
     //Afficher la liste des champion existant
     function printChampion() {
@@ -109,6 +114,8 @@ document.addEventListener('DOMContentLoaded', async function () {
         containerSpell.innerHTML = "";
         //Je vide la div spellDescription
         spellDescription.innerHTML = '';
+        //Je vide la div itemAssets
+        itemAssets.innerHTML = '';
         //J'affiche le graphique
         showChart();
         // J'affiche l'image du Champion dans la div championAssets
@@ -356,6 +363,8 @@ document.addEventListener('DOMContentLoaded', async function () {
         let result = JSON.parse(this.responseText);
         let itemList = result.data;
 
+        printItemInfo(itemList[1001]);
+
         containerChampion.innerHTML = '';
 
         console.log(itemList)
@@ -378,14 +387,14 @@ document.addEventListener('DOMContentLoaded', async function () {
 
             // Si l'image est cliqué, lancer la fonction fetchChampionInfo
             img.addEventListener('click', function () {
-                printItemInfo();
+                printItemInfo(itemList[item]);
             });
 
             //On ajoute la div dans le container containerChampion
             containerChampion.appendChild(div);
         }
 
-        function printItemInfo() {
+        function printItemInfo(item) {
 
             //Je vide la div championAssets
             championAssets.innerHTML = "";
@@ -395,29 +404,54 @@ document.addEventListener('DOMContentLoaded', async function () {
             containerSpell.innerHTML = "";
             //Je vide la div spellDescription
             spellDescription.innerHTML = '';
+            //Je vide la div itemAssets
+            itemAssets.innerHTML = '';
             //Je vide la div chart
             hideChart();
 
-            // // J'affiche l'image du Champion dans la div championAssets
-            // let img = document.createElement('img');
-            // img.src = `http://ddragon.leagueoflegends.com/cdn/img/champion/splash/${championid}_0.jpg`;
-            // championAssets.appendChild(img);
+            console.log(item);
 
-            // // J'affiche le nom du Champion
-            // let h2 = document.createElement('h2');
-            // h2.innerHTML = championInfo.name;
-            // containerInfo.appendChild(h2);
+            // J'affiche l'image du item
+            let img = document.createElement('img');
+            img.src = `http://ddragon.leagueoflegends.com/cdn/13.11.1/img/item/${item.image.full}`;
+            itemAssets.appendChild(img);
 
-            // //Balise <a> pour afficher le lore completement
-            // let a = document.createElement('a');
-            // a.innerHTML = 'voir plus'
+            // J'affiche le nom de l'item
+            let h2 = document.createElement('h2');
+            h2.innerHTML = item.name;
+            containerInfo.appendChild(h2);
 
-            // // J'affiche le lore du Champion
-            // let p = document.createElement('p');
-            // p.innerHTML = championInfo.blurb;
-            // containerInfo.appendChild(p);
-            // //Ajouter le 'voir plus ' à la fin du p
-            // p.appendChild(a);
+            // J'affiche la description de l'item
+            let p = document.createElement('p');
+            p.innerHTML = item.plaintext;
+            containerInfo.appendChild(p);
+
+            //Je verifie si l'item est achetable avec de l'or
+            let purchasableValue;
+            if (item.gold.purchasable) {
+                purchasableValue = "Oui";
+            } else {
+                purchasableValue = "Non"
+            }
+
+            // J'affiche si l'item est achetable avec de l'or
+            p = document.createElement('p');
+            p.innerHTML = `Achetable avec de l’or : ${purchasableValue}`;
+            containerInfo.appendChild(p);
+
+            // J'affiche le prix d'achat de l'item
+            p = document.createElement('p');
+            p.innerHTML = `Prix d’achat : ${item.gold.base}`;
+            containerInfo.appendChild(p);
+
+            // J'affiche le prix de revente de l'item
+            p = document.createElement('p');
+            p.innerHTML = `Prix de revente : ${item.gold.sell}`;
+            containerInfo.appendChild(p);
+
+            //J'ajoute un hr pour faire une ligne
+            let hr = document.createElement('hr');
+            containerInfo.appendChild(hr);
         }
 
     };

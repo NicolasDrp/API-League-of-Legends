@@ -88,7 +88,7 @@ section#right #championAssets img {
     border-radius: 10px;
 }
 
-#containerChampion div{
+#containerChampion div {
     width: 15%;
 }
 
@@ -98,7 +98,7 @@ section#right #championAssets img {
 
 #containerChampion div p {
     margin-top: 0;
-    font-size: large;
+    font-size: small;
 }
 
 /* Div contenant le nom et le lore du champion */
@@ -148,6 +148,7 @@ section#right #championAssets img {
     height: auto !important;
 }
 
+/* Formulaire de recherche des champion  */
 #containerForm {
     width: 100%;
     background-color: #1A1818;
@@ -156,7 +157,7 @@ section#right #championAssets img {
     margin-bottom: 20px;
 }
 
-#form {
+form {
     display: flex;
     width: 90%;
     flex-direction: column;
@@ -189,4 +190,9 @@ button[type="submit"] {
 
 button[type="submit"]:hover {
     background-color: #45a049;
+}
+
+/* Formulaire de recherche des item  */
+#formItem{
+    display: none;
 }
