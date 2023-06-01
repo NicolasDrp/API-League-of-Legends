@@ -23,6 +23,8 @@ document.addEventListener('DOMContentLoaded', async function () {
     let filter = document.getElementById('filter');
     //input pour rechercher un champion
     let searchInput = document.getElementById('searchInput');
+    //li du header pour afficher les items
+    let itemLi = document.getElementById('itemLi');
 
     function fetch(url, method, fun) {
         //Initialisation de XHR
@@ -107,6 +109,8 @@ document.addEventListener('DOMContentLoaded', async function () {
         containerSpell.innerHTML = "";
         //Je vide la div spellDescription
         spellDescription.innerHTML = '';
+        //J'affiche le graphique
+        showChart();
         // J'affiche l'image du Champion dans la div championAssets
         let img = document.createElement('img');
         img.src = `http://ddragon.leagueoflegends.com/cdn/img/champion/splash/${championid}_0.jpg`;
@@ -340,6 +344,83 @@ document.addEventListener('DOMContentLoaded', async function () {
         });
     }
 
+    itemLi.addEventListener('click', fetchItemList);
+
+    //Récuperer la liste des champion existant
+    function fetchItemList() {
+        fetch(`http://ddragon.leagueoflegends.com/cdn/13.11.1/data/en_US/item.json`, 'GET', printItem);
+    }
+
+    //Afficher la liste des champion existant
+    function printItem() {
+        let result = JSON.parse(this.responseText);
+        let itemList = result.data;
+
+        containerChampion.innerHTML = '';
+
+        console.log(itemList)
+
+
+        // Je boucle sur le tableau de résultats
+        for (const item in itemList) {
+            // Je crée un élément <div></div> pour l'item
+            let div = document.createElement('div');
+
+            // J'affiche l'image du item
+            let img = document.createElement('img');
+            img.src = `http://ddragon.leagueoflegends.com/cdn/13.11.1/img/item/${itemList[item].image.full}`;
+            div.appendChild(img);
+
+            // J'affiche le nom du Champion
+            p = document.createElement('p');
+            p.innerHTML = itemList[item].name;
+            div.appendChild(p);
+
+            // Si l'image est cliqué, lancer la fonction fetchChampionInfo
+            img.addEventListener('click', function () {
+                printItemInfo();
+            });
+
+            //On ajoute la div dans le container containerChampion
+            containerChampion.appendChild(div);
+        }
+
+        function printItemInfo() {
+
+            //Je vide la div championAssets
+            championAssets.innerHTML = "";
+            //Je vide la div containerInfo
+            containerInfo.innerHTML = "";
+            //Je vide la div containerSpell
+            containerSpell.innerHTML = "";
+            //Je vide la div spellDescription
+            spellDescription.innerHTML = '';
+            //Je vide la div chart
+            hideChart();
+
+            // // J'affiche l'image du Champion dans la div championAssets
+            // let img = document.createElement('img');
+            // img.src = `http://ddragon.leagueoflegends.com/cdn/img/champion/splash/${championid}_0.jpg`;
+            // championAssets.appendChild(img);
+
+            // // J'affiche le nom du Champion
+            // let h2 = document.createElement('h2');
+            // h2.innerHTML = championInfo.name;
+            // containerInfo.appendChild(h2);
+
+            // //Balise <a> pour afficher le lore completement
+            // let a = document.createElement('a');
+            // a.innerHTML = 'voir plus'
+
+            // // J'affiche le lore du Champion
+            // let p = document.createElement('p');
+            // p.innerHTML = championInfo.blurb;
+            // containerInfo.appendChild(p);
+            // //Ajouter le 'voir plus ' à la fin du p
+            // p.appendChild(a);
+        }
+
+    };
 
 
 

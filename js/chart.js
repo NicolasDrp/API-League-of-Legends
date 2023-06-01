@@ -41,5 +41,12 @@ function updateChart1() {
     chart.update();
 }
 
+function hideChart() {
+    ctx.style.display = "none";
+}
+function showChart() {
+    ctx.style.display = "initial";
+}
+
 const ctx = document.getElementById('myChart');
 chart = new Chart(ctx, config)

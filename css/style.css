@@ -19,12 +19,15 @@ nav {
 
 nav .logo {
     font-size: xx-large;
+    color: var(--jaune-logo-lol);
+    text-decoration: none;
 }
 
-nav a {
+nav li {
     color: var(--jaune-logo-lol);
     text-decoration: none;
     font-size: x-large;
+    cursor: pointer;
 }
 
 .menu {
@@ -42,12 +45,7 @@ nav a {
     margin-left: 0;
 }
 
-.menu li a {
-    color: var(--jaune-logo-lol);
-    text-decoration: none;
-}
-
-.menu li a:hover {
+.menu li:hover {
     text-decoration: underline;
 }
 
@@ -88,6 +86,14 @@ section#right #championAssets img {
 
 #containerChampion {
     border-radius: 10px;
+}
+
+#containerChampion div{
+    width: 15%;
+}
+
+#containerChampion div img {
+    width: 100%;
 }
 
 #containerChampion div p {
