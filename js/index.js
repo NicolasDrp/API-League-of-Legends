@@ -37,6 +37,8 @@ document.addEventListener('DOMContentLoaded', async function () {
     let itemLi = document.getElementById('itemLi');
     //Variable pour savoir sur quelle page nous nous situons
     let page = "champion";
+    //li du header pour afficher le quizz
+    let quizz = document.getElementById('quizz');
 
     function fetch(url, method, fun) {
         //Initialisation de XHR
@@ -496,6 +498,12 @@ document.addEventListener('DOMContentLoaded', async function () {
         //J'ajoute un hr pour faire une ligne
         let hr = document.createElement('hr');
         containerInfo.appendChild(hr);
+    }
+
+    quizz.addEventListener('click',fetchRandomChamp);
+
+    function fetchRandomChamp(){
+        
     }
 
 });
