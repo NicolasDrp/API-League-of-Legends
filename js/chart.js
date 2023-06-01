@@ -24,7 +24,10 @@ const config = {
         }, scales: {
             r: {
                 angleLines: {
-                    display: false
+                    display: false,
+                },
+                ticks: {
+                    display: false,
                 },
                 suggestedMin: 0,
                 suggestedMax: 250
