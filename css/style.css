@@ -3,6 +3,7 @@
     --couleur-p: rgb(212, 212, 212);
     --jaune-logo-lol: #bd9338;
     --couleur-div: #1A1818;
+    --couleur-soustexte: #6B5D5D;
 }
 
 body {
@@ -63,6 +64,7 @@ section#left {
 section#right {
     flex: 1;
     background-color: var(--couleur-div);
+    border-radius: 5px;
 }
 
 section#right #championAssets {
@@ -79,10 +81,13 @@ section#right #championAssets img {
     flex-wrap: wrap;
     justify-content: space-between;
     background-color: var(--couleur-div);
+    border-radius: 5px;
+    text-align: center;
+    padding: 10px;
 }
 
 #containerChampion {
-    text-align: center;
+    border-radius: 10px;
 }
 
 #containerChampion div p {
@@ -91,6 +96,10 @@ section#right #championAssets img {
 }
 
 /* Div contenant le nom et le lore du champion */
+#containerInfo {
+    padding: 0 30px 0 30px;
+}
+
 #containerInfo p a {
     color: var(--jaune-logo-lol);
     cursor: pointer;
@@ -99,8 +108,27 @@ section#right #championAssets img {
 /* Div contenant les 5 spell du champion */
 #containerSpell {
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
     gap: 1.5rem;
+}
+
+/* Div contenant la description du spell */
+#spellDescription {
+    padding: 0 30px 0 30px;
+}
+
+#spellDescription span {
+    color: var(--couleur-soustexte);
+}
+
+#spellDescription h3 {
+    margin: 0;
+    font-size: x-large;
+}
+
+#spellDescription p {
+    margin-top: 0;
+    margin-bottom: 90px;
 }
 
 /* Graphique des statistiques */
@@ -114,20 +142,20 @@ section#right #championAssets img {
     height: auto !important;
 }
 
-/* Div contenant le formulaire */
-/* #containerForm {
-    display: flex;
-    flex-direction: column;
-} */
 #containerForm {
-    width: 400px;
-    margin: 0 auto;
+    width: 100%;
+    background-color: #1A1818;
+    border-radius: 5px;
+    padding: 30px 0 20px 0;
+    margin-bottom: 20px;
 }
 
 #form {
     display: flex;
+    width: 90%;
     flex-direction: column;
     align-items: center;
+    margin: auto;
 }
 
 label {
