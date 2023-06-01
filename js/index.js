@@ -365,10 +365,14 @@ document.addEventListener('DOMContentLoaded', async function () {
 
         printItemInfo(itemList[1001]);
 
+        //Je vide la div containerChampion
         containerChampion.innerHTML = '';
 
-        console.log(itemList)
+        //J'affiche le form item et désaffiche le form des champions
+        form.style.display = 'none';
+        formItem.style.display = 'flex';
 
+        
 
         // Je boucle sur le tableau de résultats
         for (const item in itemList) {
