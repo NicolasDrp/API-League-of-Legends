@@ -45,6 +45,12 @@ document.addEventListener('DOMContentLoaded', async function () {
     let randomChamp;
     //Le nombre d'essaie dans le quizz
     let nbrTry = 0;
+    //Le temps restant sur le chrono
+    let timeLeft;
+    // Variable pour stocker le nombre de secondes écoulées
+    let seconds = 60;
+    // Identifiant du minuteur
+    let timerId;
 
     function fetch(url, method, fun) {
         //Initialisation de XHR
@@ -383,7 +389,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     //Récuperer la liste des champion existant
     function fetchItemList() {
-        fetch(`http://ddragon.leagueoflegends.com/cdn/13.11.1/data/en_US/item.json`, 'GET', printItem);
+        fetch(`http://ddragon.leagueoflegends.com/cdn/13.11.1/data/fr_FR/item.json`, 'GET', printItem);
     }
 
     //Afficher la liste des champion existant
@@ -544,6 +550,9 @@ document.addEventListener('DOMContentLoaded', async function () {
         //Je vide la div containerChampion
         containerChampion.innerHTML = "";
 
+        // Démarre le chronomètre
+        startTimer();
+
         // J'affiche l'image du Champion dans la div championAssets
         let img = document.createElement('img');
         img.src = `http://ddragon.leagueoflegends.com/cdn/img/champion/splash/${randomChamp.id}_0.jpg`;
@@ -559,6 +568,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         if (searchInputQuizz.value == randomChamp.name) {
             //Passer l'input en vert et relancer le jeu
             searchInputQuizz.style.border = 'solid green 4px';
+            stopTimer();
             fetchRandomChamp();
             alert('GG!');
             return;
@@ -626,10 +636,54 @@ document.addEventListener('DOMContentLoaded', async function () {
             case 7:
                 alert('perdu');
                 nbrTry = 0;
+                stopTimer();
                 fetchRandomChamp();
                 break;
-            default:
-                break;
         }
+
+        containerInfo.innerHTML = '';
+        //J'affiche le nombre d'essaie restant dans la div containerInfo
+        let p = document.createElement('p');
+        p.innerHTML = `essaie restant : ${7 - nbrTry}`;
+        containerInfo.appendChild(p);
+    };
+
+
+    function startTimer() {
+        // Démarre le minuteur en appelant la fonction updateTimer toutes les 1000 millisecondes (1 seconde)
+        timerId = setTimeout(updateTimer, 1000);
+
+        //J'affiche le nombre de secondes restantes dans la div containerInfo
+        timeLeft = document.createElement('p');
+        timeLeft.innerHTML = `Il vous reste ${seconds} secondes`;
+        containerInfo.appendChild(timeLeft);
     }
+
+    function updateTimer() {
+        // Incrémente le nombre de secondes écoulées
+        seconds--;
+        // Affiche le nombre de secondes restant
+        timeLeft.innerHTML = `Il vous reste ${seconds} secondes`;
+
+        if (seconds < 1) {
+            alert('Perdu, temps écoulé');
+            stopTimer()
+            fetchRandomChamp();
+        }
+        else {
+            // Relance le minuteur pour la prochaine seconde
+            timerId = setTimeout(updateTimer, 1000);
+        }
+
+    }
+
+    function stopTimer() {
+        // Arrête le minuteur en utilisant l'identifiant stocké
+        clearTimeout(timerId);
+        // Réinitialise le nombre de secondes à zéro
+        seconds = 60;
+    }
+
+
+
 });
