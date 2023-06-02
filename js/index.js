@@ -40,9 +40,11 @@ document.addEventListener('DOMContentLoaded', async function () {
     //li du header pour afficher le quizz des champions
     let quizz = document.getElementById('quizz');
     //li du header pour afficher le quizz des items
-    let quizzItem = document.getElementById('quizz');
-    //Formulaire de recherche/filtre des item
+    let quizzItem = document.getElementById('quizzItem');
+    //Formulaire pour le quizz champion
     let formQuizz = document.getElementById('formQuizz');
+    //Formulaire pour le quizz champion
+    let formQuizzItem = document.getElementById('formQuizzItem');
     //Champion choisis aléatoirement pour le quizz
     let randomChamp;
     //Le nombre d'essaie dans le quizz
@@ -523,7 +525,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     function fetchRandomChamp() {
         //Récupere la longueur de la liste de champion
-        lengthChamp = sortedChampions.length;
+        const lengthChamp = sortedChampions.length;
         // choisis un nombre entre 0 et lengthChamp
         let randomNumber = Math.floor(Math.random() * lengthChamp) + 1;
         //Récupere l'id de ce champion
@@ -554,6 +556,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         form.style.display = 'none';
         formItem.style.display = 'none';
         formQuizz.style.display = 'flex';
+        formQuizzItem.style.display = 'none';
         //Je vide la div containerChampion
         containerChampion.innerHTML = "";
 
@@ -691,6 +694,68 @@ document.addEventListener('DOMContentLoaded', async function () {
         // Réinitialise le nombre de secondes à zéro
         seconds = 60;
     }
+
+    //Au clic du li quizzItem , lance la fonction fetchItme list
+    quizzItem.addEventListener('click', function () {
+        fetchItemList(getRandomItem);
+    });
+
+    function getRandomItem() {
+        let result = JSON.parse(this.responseText);
+        itemList = result.data;
+
+        const listItem = Object.values(itemList);
+
+        //Récupere la longueur de la liste des items
+        const lengthItem = listItem.length;
+        // choisis un nombre entre 0 et lengthItem
+        let randomNumber = Math.floor(Math.random() * lengthItem) + 1;
+        //Récupere l'id de cet item
+        randomItem = listItem[randomNumber];
+        console.log(randomItem);
+        //Je passe le nombre d'essaie restant à 0
+        nbrTry = 0;
+
+        printRandomItem();
+    }
+
+    function printRandomItem() {
+        //Je vide la div championAssets
+        championAssets.innerHTML = "";
+        //Je vide la div containerInfo
+        containerInfo.innerHTML = "";
+        //Je vide la div containerSpell
+        containerSpell.innerHTML = "";
+        //Je vide la div spellDescription
+        spellDescription.innerHTML = '';
+        //Je vide la div itemAssets
+        itemAssets.innerHTML = '';
+        //Je vide la div chart
+        hideChart();
+        //Je cache les formulaires form et formItem et  affiche le formulaire formQuizz
+        form.style.display = 'none';
+        formItem.style.display = 'none';
+        formQuizz.style.display = 'none';
+        formQuizzItem.style.display = 'flex';
+        //Je vide la div containerChampion
+        containerChampion.innerHTML = "";
+
+        // Démarre le chronomètre
+        startTimer();
+
+        //J'affiche le nombre d'essaie restant dans la div containerInfo
+        pTry = document.createElement('p');
+        pTry.innerHTML = `essaie restant : ${7 - nbrTry}`;
+        containerInfo.appendChild(pTry);
+
+        // J'affiche l'image du item
+        let img = document.createElement('img');
+        img.src = `http://ddragon.leagueoflegends.com/cdn/13.11.1/img/item/${randomItem.image.full}`;
+        championAssets.appendChild(img);
+    }
+
+    formQuizzItem.addEventListener('submit', printQuizzResult);
+
 
 
 

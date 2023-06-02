@@ -220,7 +220,11 @@ button[type="submit"]:hover {
     display: none;
 }
 
-/* FOrmulaire du quizz */
+/* FOrmulaire du quizz champion*/
 #formQuizz {
+    display: none;
+}
+/* Formulaire du quizz item  */
+#formQuizzItem{
     display: none;
 }
