@@ -207,3 +207,8 @@ button[type="submit"]:hover {
 #formItem {
     display: none;
 }
+
+/* FOrmulaire du quizz */
+#formQuizz {
+    display: none;
+}
