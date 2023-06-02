@@ -629,24 +629,28 @@ document.addEventListener('DOMContentLoaded', async function () {
                 //J'affiche le titre du champion dans la div containerChampion
                 let p1 = document.createElement('p');
                 p1.innerHTML = `1re Indice : ${randomChamp.title}`;
+                p1.style.textAlign = 'left';
                 containerChampion.appendChild(p1);
                 break;
             case 2:
                 //J'affiche les tags du champion dans la div containerChampion
                 let p2 = document.createElement('p');
                 p2.innerHTML = `2e Indice : ${randomChamp.tags}`;
+                p2.style.textAlign = 'left';
                 containerChampion.appendChild(p2);
                 break;
             case 3:
                 //J'affiche le partype du champion dans la div containerChampion
                 let p3 = document.createElement('p');
                 p3.innerHTML = `3e Indice : ${randomChamp.partype}`;
+                p3.style.textAlign = 'left';
                 containerChampion.appendChild(p3);
                 break;
             case 4:
                 //J'affiche le nom de la compétence passive du champion dans la div containerChampion
                 let p4 = document.createElement('p');
                 p4.innerHTML = `4e Indice : ${randomChamp.passive.name}`;
+                p4.style.textAlign = 'left';
                 containerChampion.appendChild(p4);
                 break;
             case 5:
@@ -657,6 +661,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                 //J'affiche le lore du champion dans la div containerChampion
                 let p5 = document.createElement('p');
                 p5.innerHTML = `4e Indice : ${newLore}`;
+                p5.style.textAlign = 'left';
                 containerChampion.appendChild(p5);
                 break;
             case 7:
@@ -785,19 +790,22 @@ document.addEventListener('DOMContentLoaded', async function () {
                 //J'affiche le titre du champion dans la div containerChampion
                 let p1 = document.createElement('p');
                 p1.innerHTML = `1re Indice : prix de base ${randomItem.gold.base} gold`;
+                p1.style.textAlign = 'left';
                 containerChampion.appendChild(p1);
                 break;
             case 2:
                 //J'affiche les tags du champion dans la div containerChampion
                 let p2 = document.createElement('p');
                 p2.innerHTML = `2e Indice : ${randomItem.tags}`;
+                p2.style.textAlign = 'left';
                 containerChampion.appendChild(p2);
                 break;
             case 3:
                 //J'affiche le lore du champion dans la div containerChampion
-                let p5 = document.createElement('p');
-                p5.innerHTML = `3e Indice : ${randomItem.description}`;
-                containerChampion.appendChild(p5);
+                let p3 = document.createElement('p');
+                p3.innerHTML = `3e Indice : ${randomItem.description}`;
+                p3.style.textAlign = 'left';
+                containerChampion.appendChild(p3);
                 break;
             case 7:
                 alert('perdu');
