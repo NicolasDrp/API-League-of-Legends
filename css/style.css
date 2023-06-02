@@ -82,6 +82,7 @@ section#right #itemAssets {
 
 section#right #championAssets img {
     width: 100%;
+    margin: auto;
 }
 
 #itemAssets {

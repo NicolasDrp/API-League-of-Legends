@@ -771,6 +771,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         // J'affiche l'image du item
         let img = document.createElement('img');
         img.src = `http://ddragon.leagueoflegends.com/cdn/13.11.1/img/item/${randomItem.image.full}`;
+        img.style.width = "50%"
         championAssets.appendChild(img);
     }
 
