@@ -500,10 +500,76 @@ document.addEventListener('DOMContentLoaded', async function () {
         containerInfo.appendChild(hr);
     }
 
-    quizz.addEventListener('click',fetchRandomChamp);
+    quizz.addEventListener('click', fetchRandomChamp);
 
-    function fetchRandomChamp(){
-        
+    function fetchRandomChamp() {
+        //Récupere la longueur de la liste de champion
+        lengthChamp = sortedChampions.length;
+        // choisis un nombre entre 0 et lengthChamp
+        let randomNumber = Math.floor(Math.random() * lengthChamp) + 1;
+        //Récupere l'id de ce champion
+        randomChampId = sortedChampions[randomNumber].id;
+
+        fetch(`http://ddragon.leagueoflegends.com/cdn/13.10.1/data/fr_FR/champion/${randomChampId}.json`, 'GET', printRandomChamp);
     }
 
+    function printRandomChamp() {
+        let result = JSON.parse(this.responseText);
+        let randomChamp = result.data[randomChampId];
+
+        //Je vide la div championAssets
+        championAssets.innerHTML = "";
+        //Je vide la div containerInfo
+        containerInfo.innerHTML = "";
+        //Je vide la div containerSpell
+        containerSpell.innerHTML = "";
+        //Je vide la div spellDescription
+        spellDescription.innerHTML = '';
+        //Je vide la div itemAssets
+        itemAssets.innerHTML = '';
+        //Je vide la div chart
+        hideChart();
+        //Je cache les formulaires form et formItem et  affiche le formulaire formQuizz
+        form.style.display = 'none';
+        formItem.style.display = 'none';
+        //Je vide la div containerChampion
+        containerChampion.innerHTML = "";
+
+        console.log(randomChamp);
+
+        // J'affiche l'image du Champion dans la div championAssets
+        let img = document.createElement('img');
+        img.src = `http://ddragon.leagueoflegends.com/cdn/img/champion/splash/${randomChamp.id}_0.jpg`;
+        championAssets.appendChild(img);
+
+        //J'affiche le titre du champion dans la div containerChampion
+        let p = document.createElement('p');
+        p.innerHTML = `1re Indice : ${randomChamp.title}`;
+        containerChampion.appendChild(p);
+
+        //J'affiche les tags du champion dans la div containerChampion
+        p = document.createElement('p');
+        p.innerHTML = `2e Indice : ${randomChamp.tags}`;
+        containerChampion.appendChild(p);
+
+        //J'affiche le partype du champion dans la div containerChampion
+        p = document.createElement('p');
+        p.innerHTML = `3e Indice : ${randomChamp.partype}`;
+        containerChampion.appendChild(p);
+
+        //J'affiche le nom de la compétence passive du champion dans la div containerChampion
+        p = document.createElement('p');
+        p.innerHTML = `4e Indice : ${randomChamp.passive.name}`;
+        containerChampion.appendChild(p);
+
+        //Je remplace le nom du champion dans son lore
+        let lore = randomChamp.lore;
+        let newLore = lore.replace(randomChamp.name, "Champion");
+
+        //J'affiche le lore du champion dans la div containerChampion
+        p = document.createElement('p');
+        p.innerHTML = `4e Indice : ${newLore}`;
+        containerChampion.appendChild(p);
+
+    }
 });
