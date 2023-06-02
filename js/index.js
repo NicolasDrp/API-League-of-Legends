@@ -25,6 +25,8 @@ document.addEventListener('DOMContentLoaded', async function () {
     let sortedChampions;
     //List trier des items
     let itemList;
+    //List des item en tableau
+    let listItem;
     //Select contenant les tags des champions
     let filter = document.getElementById('filter');
     //Select contenant les tags des items
@@ -57,6 +59,8 @@ document.addEventListener('DOMContentLoaded', async function () {
     let seconds = 60;
     // Identifiant du minuteur
     let timerId;
+    //Variable pour svoir sur quel quizz on se situe
+    let QuizzName;
 
     function fetch(url, method, fun) {
         //Initialisation de XHR
@@ -532,6 +536,11 @@ document.addEventListener('DOMContentLoaded', async function () {
         randomChampId = sortedChampions[randomNumber].id;
         //Je passe le nombre d'essaie restant à 0
         nbrTry = 0;
+        //J'indique que je suis sur le quizz du champion
+        QuizzName = 'champion';
+
+        //Stop le timer
+        stopTimer();
 
         fetch(`http://ddragon.leagueoflegends.com/cdn/13.10.1/data/fr_FR/champion/${randomChampId}.json`, 'GET', printRandomChamp);
     }
@@ -574,15 +583,17 @@ document.addEventListener('DOMContentLoaded', async function () {
         championAssets.appendChild(img);
     }
 
-    formQuizz.addEventListener('submit', printQuizzResult);
+    formQuizz.addEventListener('submit', function (event) {
+        printQuizzResult(sortedChampions, randomChamp, searchInputQuizz, printQuizzHint);
+    });
 
-    function printQuizzResult() {
+    function printQuizzResult(list, randomObjet, input, fun) {
         event.preventDefault();
 
         //Si le joueur a bien deviner le champion
-        if (searchInputQuizz.value == randomChamp.name) {
+        if (input.value == randomObjet.name) {
             //Passer l'input en vert et relancer le jeu
-            searchInputQuizz.style.border = 'solid green 4px';
+            input.style.border = 'solid green 4px';
             stopTimer();
             fetchRandomChamp();
             alert('GG!');
@@ -590,26 +601,26 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
 
         //On boucle dans la liste des champion
-        for (let i = 0; i < sortedChampions.length; i++) {
+        for (let i = 0; i < list.length; i++) {
             //Si la reponse correspond à un champion existant
-            if (sortedChampions[i].name == searchInputQuizz.value) {
+            if (list[i].name == input.value) {
                 //On vérifie si ils ont des tags en commun
-                if (randomChamp.tags.some(item => sortedChampions[i].tags.includes(item))) {
+                if (randomObjet.tags.some(item => list[i].tags.includes(item))) {
                     //Si oui -> input en orange
-                    searchInputQuizz.style.border = 'solid orange 4px';
+                    input.style.border = 'solid orange 4px';
                     break;
                 } else {
                     //Si non -> input en rouge
-                    searchInputQuizz.style.border = 'solid red 4px';
+                    input.style.border = 'solid red 4px';
                     break;
                 }
             } else {
                 // Si la reponse ne correspond à aucun champion -> input en rouge
-                searchInputQuizz.style.border = 'solid blue 4px';
+                input.style.border = 'solid blue 4px';
             }
         }
         nbrTry++;
-        printQuizzHint();
+        fun();
     }
 
     function printQuizzHint() {
@@ -679,7 +690,12 @@ document.addEventListener('DOMContentLoaded', async function () {
         if (seconds < 1) {
             alert('Perdu, temps écoulé');
             stopTimer()
-            fetchRandomChamp();
+            if (QuizzName == 'champion') {
+                fetchRandomChamp();
+            } else {
+                fetchItemList(getRandomItem);
+            }
+
         }
         else {
             // Relance le minuteur pour la prochaine seconde
@@ -703,8 +719,13 @@ document.addEventListener('DOMContentLoaded', async function () {
     function getRandomItem() {
         let result = JSON.parse(this.responseText);
         itemList = result.data;
+        listItem = Object.values(itemList);
 
-        const listItem = Object.values(itemList);
+        //J'indique que je suis sur le quizz de l'item
+        QuizzName = 'item';
+
+        //Stop le timer
+        stopTimer();
 
         //Récupere la longueur de la liste des items
         const lengthItem = listItem.length;
@@ -712,7 +733,6 @@ document.addEventListener('DOMContentLoaded', async function () {
         let randomNumber = Math.floor(Math.random() * lengthItem) + 1;
         //Récupere l'id de cet item
         randomItem = listItem[randomNumber];
-        console.log(randomItem);
         //Je passe le nombre d'essaie restant à 0
         nbrTry = 0;
 
@@ -754,9 +774,38 @@ document.addEventListener('DOMContentLoaded', async function () {
         championAssets.appendChild(img);
     }
 
-    formQuizzItem.addEventListener('submit', printQuizzResult);
+    formQuizzItem.addEventListener('submit', function (event) {
+        printQuizzResult(listItem, randomItem, searchInputQuizzItem, printQuizzHintItem);
+    });
 
+    function printQuizzHintItem() {
+        switch (nbrTry) {
+            case 1:
+                //J'affiche le titre du champion dans la div containerChampion
+                let p1 = document.createElement('p');
+                p1.innerHTML = `1re Indice : prix de base ${randomItem.gold.base} gold`;
+                containerChampion.appendChild(p1);
+                break;
+            case 2:
+                //J'affiche les tags du champion dans la div containerChampion
+                let p2 = document.createElement('p');
+                p2.innerHTML = `2e Indice : ${randomItem.tags}`;
+                containerChampion.appendChild(p2);
+                break;
+            case 3:
+                //J'affiche le lore du champion dans la div containerChampion
+                let p5 = document.createElement('p');
+                p5.innerHTML = `3e Indice : ${randomItem.description}`;
+                containerChampion.appendChild(p5);
+                break;
+            case 7:
+                alert('perdu');
+                nbrTry = 0;
+                stopTimer();
+                fetchItemList(getRandomItem)
+                break;
+        }
 
-
-
+        pTry.innerHTML = `essaie restant : ${7 - nbrTry}`;
+    };
 });
