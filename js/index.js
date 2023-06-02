@@ -37,14 +37,18 @@ document.addEventListener('DOMContentLoaded', async function () {
     let itemLi = document.getElementById('itemLi');
     //Variable pour savoir sur quelle page nous nous situons
     let page = "champion";
-    //li du header pour afficher le quizz
+    //li du header pour afficher le quizz des champions
     let quizz = document.getElementById('quizz');
+    //li du header pour afficher le quizz des items
+    let quizzItem = document.getElementById('quizz');
     //Formulaire de recherche/filtre des item
     let formQuizz = document.getElementById('formQuizz');
     //Champion choisis aléatoirement pour le quizz
     let randomChamp;
     //Le nombre d'essaie dans le quizz
     let nbrTry = 0;
+    //Balise p qui affiche le nombre d'essaie restant
+    let pTry;
     //Le temps restant sur le chrono
     let timeLeft;
     // Variable pour stocker le nombre de secondes écoulées
@@ -385,11 +389,14 @@ document.addEventListener('DOMContentLoaded', async function () {
         });
     }
 
-    itemLi.addEventListener('click', fetchItemList);
+    itemLi.addEventListener('click', function () {
+        fetchItemList(printItem);
+    });
+
 
     //Récuperer la liste des champion existant
-    function fetchItemList() {
-        fetch(`http://ddragon.leagueoflegends.com/cdn/13.11.1/data/fr_FR/item.json`, 'GET', printItem);
+    function fetchItemList(fun) {
+        fetch(`http://ddragon.leagueoflegends.com/cdn/13.11.1/data/fr_FR/item.json`, 'GET', fun);
     }
 
     //Afficher la liste des champion existant
@@ -553,6 +560,11 @@ document.addEventListener('DOMContentLoaded', async function () {
         // Démarre le chronomètre
         startTimer();
 
+        //J'affiche le nombre d'essaie restant dans la div containerInfo
+        pTry = document.createElement('p');
+        pTry.innerHTML = `essaie restant : ${7 - nbrTry}`;
+        containerInfo.appendChild(pTry);
+
         // J'affiche l'image du Champion dans la div championAssets
         let img = document.createElement('img');
         img.src = `http://ddragon.leagueoflegends.com/cdn/img/champion/splash/${randomChamp.id}_0.jpg`;
@@ -641,11 +653,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                 break;
         }
 
-        containerInfo.innerHTML = '';
-        //J'affiche le nombre d'essaie restant dans la div containerInfo
-        let p = document.createElement('p');
-        p.innerHTML = `essaie restant : ${7 - nbrTry}`;
-        containerInfo.appendChild(p);
+        pTry.innerHTML = `essaie restant : ${7 - nbrTry}`;
     };
 
 
