@@ -660,7 +660,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
                 //J'affiche le lore du champion dans la div containerChampion
                 let p5 = document.createElement('p');
-                p5.innerHTML = `4e Indice : ${newLore}`;
+                p5.innerHTML = `5e Indice : ${newLore}`;
                 p5.style.textAlign = 'left';
                 containerChampion.appendChild(p5);
                 break;
